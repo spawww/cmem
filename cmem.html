@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<title>CMEM</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
+<style>
+.titolo {
+  padding : 1rem;
+}
+
+.finepagina {
+   margin: 1rem;
+}
+
+img {
+  height : 1.5rem;
+}
+
+html, body, form, div {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  width: 100%;
+  height: 100%;
+}
+
+textarea {
+  vertical-align:top;
+  margin: 0.2rem;
+  padding: 0.2rem;
+  border: 0;
+  width: 97%;
+  height: 90%;
+}
+</style>
+
+</head>
+<body>
+
+<script>
+
+//const indirizzo = 'http://127.0.0.1:8080/cmem';
+const indirizzo = 'https://spaw.pythonanywhere.com/cmem';
+//const indirizzo = 'https://cmem.onrender.com/';
+
+function aggiornaTesto()
+{
+  fetch(indirizzo)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(userData => {
+    // Process the retrieved user data
+    document.getElementById('testo').value = userData.testo;
+    document.getElementById('testo').focus();
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
+
+function inviaTesto()
+{
+
+const formData = {
+  testo: document.getElementById('testo').value,
+};
+
+// Make a POST request using the Fetch API
+fetch(indirizzo, {
+  method: 'POST',
+  body: JSON.stringify(formData),
+})
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(newUserData => {
+    // Process the newly created user data
+    document.getElementById('testo').focus();
+    console.log('New User Data:', newUserData);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
+
+</script>
+
+  <span class="titolo">
+  <button class="titolo"  type="button" onclick="aggiornaTesto()"> <img src="cloudDownload.png" alt="Download"> </button>
+  <span class="finepagina">CMEM</span>
+  <button  class="titolo" type="button" onclick="inviaTesto()"> <img src="cloudUpload.png" alt="Upload"> </button>
+  </span>
+  <div>
+    <textarea autofocus name="testo" id="testo"></textarea>
+  </div>
+
+</body>
+</html>

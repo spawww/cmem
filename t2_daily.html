@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<title>t2_daily</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+</head>
+<body>
+<div>
+  <canvas id="myChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const ctx = document.getElementById('myChart');
+
+  var data1;
+  var data2;
+  var data3;
+
+  function range(start, stop)
+  {
+    var array = [];
+
+    var length = stop - start; 
+
+    for (var i = 0; i <= length; i++) { 
+        array[i] = start;
+        start++;
+    }
+
+    return array;
+  }
+
+  function dayOfYear()
+  {
+    var now = new Date();
+    var start = new Date(now.getFullYear(), 0, 0);
+    var diff = now - start;
+    var oneDay = 1000 * 60 * 60 * 24;
+    return Math.floor(diff / oneDay);
+  }
+
+  function populateData(obj, size) {
+
+      console.log("Popolo");
+      console.log(obj[83].name);
+      console.log(obj[84].name);
+      console.log(obj[85].name);
+      var dof = dayOfYear() - 6;
+      data1 = obj[83].data.slice(dof - size, dof);
+      data2 = obj[84].data.slice(dof - size, dof);
+      data3 = obj[85].data.slice(dof - size, dof);
+  }
+
+  async function populate() {
+    const requestURL =
+      "https://climatereanalyzer.org/clim/t2_daily/json/era5_world_t2_day.json";
+    const request = new Request(requestURL);
+  
+    const response = await fetch(request);
+    const superHeroesText = await response.text();
+  
+    const superHeroes = JSON.parse(superHeroesText);
+    console.log("Prima di Popolo");
+    populateData(superHeroes, 12);
+    console.log("Dopo di Popolo");
+
+    new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: range(-12 + 1, 0),
+      datasets: [{
+        label: '2023',
+        data: data1,
+        tension: 0.1,
+        fill: false,
+        borderWidth: 1,
+        borderColor: 'rgb(75, 2, 192)'
+      },
+      {
+        label: '2024',
+        data: data2,
+        tension: 0.1,
+        fill: false,
+        borderWidth: 1,
+        borderColor: 'rgb(75, 192, 1)'
+      },
+      {
+        label: '2025',
+        data: data3,
+        tension: 0.1,
+        fill: false,
+        borderWidth: 3,
+        borderColor: 'rgb(192, 0, 0)'
+      }]
+    },
+    options: {
+        scales: {
+            y: {
+                suggestedMin: 16,
+                suggestedMax: 17
+            }
+        }
+    }
+  });
+  }
+
+  populate();
+
+</script>
+
+</body>
+</html>
