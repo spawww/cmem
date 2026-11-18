@@ -98,7 +98,7 @@ function salvaTesto()
   const params = new URLSearchParams();
   params.append("titolo", "");
   params.append("nota", document.getElementById('testo').value);
-  params.append("formato", "pre");
+  params.append("formato", "p");
 
   fetch("https://spaw.pythonanywhere.com/noteAggiungi", {
     method: "POST",
